@@ -1,0 +1,6 @@
+r47717_main:
+    resource: "@R47717MainBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+

@@ -1,0 +1,49 @@
+{% extends 'R47717MainBundle::layout.html.twig' %}
+
+{% block title %}All Tasks List{% endblock %}
+
+{% block body -%}
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Task</th>
+                <th>Status</th>
+                <th>Start Date</th>
+                <th>Due Date</th>
+                <th>Is completed</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+        {% if not entity.completed or not uncompleted_only and entity.completed %}
+            <tr>
+                {% if entity.completed %}
+                    <td><a class='completed' href="{{ path('task_edit', { 'id': entity.id }) }}">{{ entity.task }}</a></td>
+                {% else %}
+                    <td><a href="{{ path('task_edit', { 'id': entity.id }) }}">{{ entity.task }}</a></td>
+                {% endif %}
+                <td>{{ entity.status }}</td>
+                <td>{% if entity.startedDate %}{{ entity.startedDate|date('d-m-Y') }}{% endif %}</td>
+                <td>{% if entity.due %}{{ entity.due|date('d-m-Y') }}{% endif %}</td>
+                <td>{% if entity.completed %}Yes{% else %}No{% endif %}</td>
+                <td>
+                    {% if entity.completed %}
+                        <a href="{{ path('task_mark_uncomplete', {'id': entity.id}) }}"><span class="glyphicon glyphicon-edit"></span></a>
+                    {% else %}
+                        <a href="{{ path('task_mark_complete', {'id': entity.id}) }}"><span class="glyphicon glyphicon-ok"></span></a>
+                    {% endif %}
+                    <a href="{{ path('task_delete', {'id': entity.id}) }}"><span class="glyphicon glyphicon-trash"></span></a>
+                </td>
+            </tr>
+        {% endif %}
+        {% endfor %}
+        </tbody>
+    </table>
+    {% block filter_form %}
+        {{ form_start(filter_form, {'attr': {'novalidate': 'novalidate'}}) }}
+        {{ form_widget(filter_form.check) }}
+        {{ form_label(filter_form.check) }}
+        {{ form_rest(filter_form) }}
+    {% endblock %}
+{% endblock %}
