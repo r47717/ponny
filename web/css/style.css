@@ -35,3 +35,10 @@ body {
 .completed {
 	text-decoration: line-through;
 }
+
+.stat-table td {
+	border: 1px solid #ccc;
+	width: 300px;
+	padding: 10px;
+}
+
