@@ -20,7 +20,7 @@ body {
 	margin-top: 0px;
 }
 
-#r47717_mainbundle_task_task {
+#r47717_mainbundle_task_task, #form_task, #form_description, #form_status  {
 	width: 100%;
 }
 
@@ -34,6 +34,14 @@ body {
 
 .completed {
 	text-decoration: line-through;
+}
+
+.overdue-row {
+	background: #FFC2B3;
+}
+
+.ontime-row {
+
 }
 
 .stat-table td {

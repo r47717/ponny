@@ -3,6 +3,9 @@
 {% block title %}Edit Task{% endblock %}
 
 {% block body -%}
+	{% if not entity.completed and entity.isTaskOverdue() %}
+		<div class='alert alert-danger'>This task is overdue</div>
+	{% endif %}
 	{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
     <table class="table table-bordered">
 	    <tr><td>ID</td><td>{{ entity.id }}</td></tr>

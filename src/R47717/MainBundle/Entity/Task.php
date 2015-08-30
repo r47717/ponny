@@ -62,6 +62,15 @@ class Task
      */
     private $completed;
 
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="completedDate", type="datetime", nullable=true)
+     */
+    private $completedDate;
+
+
     /**
      * @var \DateTime
      *
@@ -216,5 +225,32 @@ class Task
     public function getStartedDate()
     {
         return $this->startedDate;
+    }
+
+    /**
+     * Set completedDate
+     *
+     * @param \DateTime $completedDate
+     * @return Task
+     */
+    public function setCompletedDate($completedDate)
+    {
+        $this->completedDate = $completedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get completedDate
+     *
+     * @return \DateTime 
+     */
+    public function getCompletedDate()
+    {
+        return $this->completedDate;
+    }
+
+    public function isTaskOverdue() {
+        return $this->due < new \DateTime('today');
     }
 }

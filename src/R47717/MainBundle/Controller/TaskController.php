@@ -90,7 +90,7 @@ class TaskController extends Controller
             'action' => $this->generateUrl('task_new'),
             'method' => 'POST',
         ));
-        $form->add('submit', 'submit', ['label' => 'Create', 'attr' => ['class' => 'btn-lg btn-success']]);
+        $form->add('submit', 'submit', ['label' => 'Create', 'attr' => ['class' => 'btn btn-success']]);
         $form->handleRequest($request);
 
         if ( $form->isSubmitted() ) {
@@ -196,6 +196,7 @@ class TaskController extends Controller
         }
 
         $entity->setCompleted(true);
+        $entity->setCompletedDate(new \DateTime('today'));
         $em->flush();
 
         return $this->redirect($this->generateUrl('task'));
@@ -253,7 +254,9 @@ class TaskController extends Controller
         foreach ($entities as $entity) {
             if ($entity->getCompleted()) {
                 $completed++;
-                $completed_ontime++;
+                if ($entity->getCompletedDate() <= $entity->getDue()) {
+                    $completed_ontime++;
+                }
             } else {
                 $pending++;
                 if ($entity->getDue() > $today) {

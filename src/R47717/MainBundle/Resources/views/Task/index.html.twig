@@ -17,7 +17,11 @@
         <tbody>
         {% for entity in entities %}
         {% if not entity.completed or not uncompleted_only and entity.completed %}
-            <tr>
+            {% if not entity.completed and (entity.isTaskOverdue()) %}
+            <tr class='overdue-row'>
+            {% else %}
+            <tr class='ontime-row'>
+            {% endif %}
                 {% if entity.completed %}
                     <td><a class='completed' href="{{ path('task_edit', { 'id': entity.id }) }}">{{ entity.task }}</a></td>
                 {% else %}
