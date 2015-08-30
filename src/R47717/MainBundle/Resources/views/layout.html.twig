@@ -46,7 +46,7 @@
             <li><a href="{{ path('task') }}"><span class="glyphicon glyphicon-th-list"></span>&nbsp;All Tasks List</a></li>
             <li><a href="{{ path('show_overdue') }}"><span class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;Overdue Tasks List</a></li>
             <li><a href="{{ path('show_stat') }}"><span class="glyphicon glyphicon-stats"></span>&nbsp;Statistics</a></li>
-            <li><a href=""><span class="glyphicon glyphicon-plus"></span>&nbsp;tbd</a></li>
+            <li><a href="{{ path('calendar_show')}}"><span class="glyphicon glyphicon-time"></span>&nbsp;Task Calendar</a></li>
             <li><a href=""><span class="glyphicon glyphicon-plus"></span>&nbsp;tbd</a></li>
           </ul>
         </div>
@@ -70,6 +70,8 @@
         </div>
       </div> <!-- row -->
     </div> <!-- container -->
+
+    <div class="footer"></div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>

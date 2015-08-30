@@ -253,4 +253,8 @@ class Task
     public function isTaskOverdue() {
         return $this->due < new \DateTime('today');
     }
+
+    public function isDueThisMonth($date) {
+        return ($this->due->format('m') == $date->format('m'));
+    }
 }

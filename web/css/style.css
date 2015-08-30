@@ -50,3 +50,12 @@ body {
 	padding: 10px;
 }
 
+.calendar-table td {
+	border: 1px solid #ccc;
+	width: 500px;
+	padding: 30px;
+}
+
+.footer {
+	height: 100px;
+}
