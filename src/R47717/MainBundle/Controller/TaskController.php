@@ -27,8 +27,16 @@ class TaskController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('R47717MainBundle:Task')->findAll();
+        $field = $this->getDoctrine()->getManager()->getRepository('R47717MainBundle:TaskList')
+            ->findAll()[0]->getSortTasksBy();
+
+        $qb = $this->getDoctrine()->getManager()->createQueryBuilder();
+        $q = $qb->select(['task'])
+           ->from('R47717MainBundle:Task', 'task')
+           ->orderBy('task.' . $field, 'ASC')
+           ->getQuery();
+
+        $entities = $q->getResult();
 
         $filter_form = $this->createFormBuilder()
             ->add('check', 'checkbox', ['label' => 'uncompleted only', 'attr' => [
@@ -238,51 +246,18 @@ class TaskController extends Controller
     }
 
     /**
-     * @Route("/stat", name="show_stat")
+     * @Route("/sort/{field}", name="sort_tasks")
      */
-    public function showStat() {
+    public function sortTaskBy($field) {
 
-        $entities = $this->getDoctrine()->getManager()->getRepository('R47717MainBundle:Task')->findAll();
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('R47717MainBundle:TaskList')->findAll()[0];
+        $entity->setSortTasksBy($field);
+        $em->persist($entity);
+        $em->flush();
 
-        $all = count($entities);
-        $completed = 0; 
-        $completed_ontime = 0; 
-        $pending = 0;
-        $pending_ontime = 0;
-        $today = new \DateTime('today');
-
-        foreach ($entities as $entity) {
-            if ($entity->getCompleted()) {
-                $completed++;
-                if ($entity->getCompletedDate() <= $entity->getDue()) {
-                    $completed_ontime++;
-                }
-            } else {
-                $pending++;
-                if ($entity->getDue() > $today) {
-                    $pending_ontime++;
-                }
-            }
-        }
-
-        $completed_overdue = $completed - $completed_ontime;
-        $pending_overdue = $pending - $pending_ontime;
-
-        $stat = [
-            'all' => $all,
-            'completed' => $completed,
-            'completed_ontime' => $completed_ontime,
-            'completed_overdue' => $completed_overdue,
-            'pending' => $pending,
-            'pending_ontime' => $pending_ontime, 
-            'pending_overdue' => $pending_overdue,
-        ];
-
-        return $this->render('R47717MainBundle:Task:stat.html.twig', [
-            'stat' => $stat,
-        ]);
+        return $this->redirect($this->generateUrl('task'));
     }
-
 }
 
 

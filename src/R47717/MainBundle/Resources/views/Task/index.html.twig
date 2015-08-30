@@ -6,11 +6,11 @@
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>Task</th>
-                <th>Status</th>
-                <th>Start Date</th>
-                <th>Due Date</th>
-                <th>Is completed</th>
+                <th><a href="{{ path('sort_tasks', {'field': 'task'}) }}">Task</a></th>
+                <th><a href="{{ path('sort_tasks', {'field': 'status'}) }}">Status</a></th>
+                <th><a href="{{ path('sort_tasks', {'field': 'startedDate'}) }}">Start Date</a></th>
+                <th><a href="{{ path('sort_tasks', {'field': 'due'}) }}">Due Date</a></th>
+                <th><a href="{{ path('sort_tasks', {'field': 'completed'}) }}">Is completed</a></th>
                 <th>Actions</th>
             </tr>
         </thead>
