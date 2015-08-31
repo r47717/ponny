@@ -2,6 +2,17 @@
 
 body {
 	font-family: Verdana;
+	background: url(../img/bg.jpg) fixed no-repeat center;
+	background-size: cover;
+}
+
+.str-search {
+	height: 36px; width: 200px; display: inline-block; vertical-align: middle;
+}
+
+.btn-search {
+	height: 36px; display: inline-block; vertical-align: middle;
+	color: #aaa;
 }
 
 .row {
@@ -42,6 +53,10 @@ body {
 
 .ontime-row {
 
+}
+
+table {
+	background-color: #fff;
 }
 
 .stat-table td {

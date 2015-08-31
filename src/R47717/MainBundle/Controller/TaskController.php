@@ -14,7 +14,7 @@ use \Doctrine\Common\Util\Debug;
 /**
  * Task controller.
  *
- * @Route("/task")
+ * @Route("/")
  */
 class TaskController extends Controller
 {
@@ -88,7 +88,7 @@ class TaskController extends Controller
     /**
      * Displays a form to create a new Task entity.
      *
-     * @Route("/new", name="task_new")
+     * @Route("/task/new", name="task_new")
      * 
      */
     public function newAction(Request $request)
@@ -129,7 +129,7 @@ class TaskController extends Controller
     /**
      * Edits an existing Task entity.
      *
-     * @Route("/edit/{id}", name="task_edit")
+     * @Route("/task/edit/{id}", name="task_edit")
      * 
      */
     public function editAction(Request $request, $id)
@@ -167,7 +167,7 @@ class TaskController extends Controller
     /**
      * Deletes a Task entity.
      *
-     * @Route("/delete/{id}", name="task_delete")
+     * @Route("/task/delete/{id}", name="task_delete")
      * 
      */
     public function deleteAction(Request $request, $id)
@@ -191,7 +191,7 @@ class TaskController extends Controller
     /**
      * Marks a Task entity as completed.
      *
-     * @Route("/complete/{id}", name="task_mark_complete")
+     * @Route("/task/complete/{id}", name="task_mark_complete")
      * 
      */
     public function markCompleteAction(Request $request, $id)
@@ -213,7 +213,7 @@ class TaskController extends Controller
     /**
      * Marks a Task entity as uncompleted.
      *
-     * @Route("/uncomplete/{id}", name="task_mark_uncomplete")
+     * @Route("/task/uncomplete/{id}", name="task_mark_uncomplete")
      * 
      */
     public function markUncompleteAction(Request $request, $id)
@@ -233,7 +233,7 @@ class TaskController extends Controller
 
 
     /**
-     * @Route("/overdue", name="show_overdue")
+     * @Route("/task/overdue", name="show_overdue")
      */
     public function showOverdue() {
         $em = $this->getDoctrine()->getManager();
@@ -246,7 +246,7 @@ class TaskController extends Controller
     }
 
     /**
-     * @Route("/sort/{field}", name="sort_tasks")
+     * @Route("/task/sort/{field}", name="sort_tasks")
      */
     public function sortTaskBy($field) {
 
