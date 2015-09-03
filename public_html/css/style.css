@@ -2,8 +2,8 @@
 
 body {
 	font-family: Verdana;
-	background: url(../img/bg.jpg) fixed no-repeat center;
-	background-size: cover;
+	background: url(../img/bg.png) fixed repeat;
+	/*background-size: cover;*/
 }
 
 .str-search {
@@ -21,6 +21,12 @@ body {
 
 .sidebar {
 	margin-top: 40px;
+}
+
+.sidebar ul>li>a:hover {
+	background-color: #999;
+	color: #fff;
+	
 }
 
 .main {

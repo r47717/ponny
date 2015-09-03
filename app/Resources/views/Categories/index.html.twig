@@ -1,0 +1,29 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Task Categories{% endblock %}
+
+{% block body %}
+<table class="table table-bordered">
+	<tr>
+		<th>Id</th>
+		<th>Name</th>
+		<th>Tasks in category</th>
+		<th>Actions</th>
+	</tr>
+	{% for item in categories %}
+		<tr>
+			<td>{{ item.id }}</td>
+			<td>{{ item.name }}</td>
+			<td></td>
+			<td><a href="{{ path('category_delete', {'id': item.id}) }}"><span class="glyphicon glyphicon-remove"></span></a></td>
+		</tr>
+	{% endfor %}
+</table>
+
+
+{{ form_start(add_form)}}
+{{ form_label(add_form.name, 'Add new category: ') }}
+{{ form_widget(add_form.name) }}
+{{ form_widget(add_form.submit) }}
+{{ form_end(add_form) }}
+{% endblock %}

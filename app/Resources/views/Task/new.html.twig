@@ -16,9 +16,15 @@
 		</tr>
 		<tr>
 			<td>{{ form_label(form.due, 'Due Date') }}</td>
-			<td>{{ form_widget(form.due) }}</td>
+			<td>
+			{% if form.due is null %}
+				<span>No due</span>
+			{% else %}
+				{{ form_widget(form.due) }}
+			{% endif %}
+			</td>
 		</tr>
 	</table>
-	{{ form_rest(form) }}
+	{{ form_end(form) }}
 
 {% endblock %}

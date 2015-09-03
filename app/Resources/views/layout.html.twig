@@ -38,13 +38,15 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-2 sidebar">
-          <ul class="nav nav-sidebar">
+          <ul class="nav nav-sidebar" id="side-bar-menu">
             <li><a href="{{ path('task_new') }}"><span class="glyphicon glyphicon-plus"></span>&nbsp;Add New Task</a></li>
             <li><a href="{{ path('task') }}"><span class="glyphicon glyphicon-th-list"></span>&nbsp;All Tasks List</a></li>
             <li><a href="{{ path('show_overdue') }}"><span class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;Overdue Tasks List</a></li>
             <li><a href="{{ path('show_stat') }}"><span class="glyphicon glyphicon-stats"></span>&nbsp;Statistics</a></li>
             <li><a href="{{ path('calendar_show')}}"><span class="glyphicon glyphicon-time"></span>&nbsp;Task Calendar</a></li>
-            <li><a href=""><span class="glyphicon glyphicon-plus"></span>&nbsp;tbd</a></li>
+            <hr>
+            <li><a href="{{ path('categories')}}"><span class="glyphicon glyphicon-tags"></span>&nbsp;Categories</a></li>
+            <li><a href="{{ path('markers')}}"><span class="glyphicon glyphicon-tint"></span>&nbsp;Status Markers</a></li>
           </ul>
         </div>
         <div class="col-md-10 main">

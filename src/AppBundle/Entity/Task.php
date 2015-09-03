@@ -3,19 +3,37 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+
 
 /**
  * Task
  *
  * @ORM\Table()
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="TaskRepository")
  */
 class Task
 {
+    /**
+     * @ORM\ManyToMany(targetEntity="Category")
+     */
+    protected $categories;
+
+    public function getCategories() {
+        return $this->categories;
+    }
+
+    public function addCategory($category) {
+        $categories[] = $category;
+    }
+
     public function __construct() {
-        $this->due = new \DateTime('tomorrow');
+        $this->due = null; //new \DateTime('tomorrow');
         $this->startedDate = new \DateTime('today');
         $this->completed = false;
+        $this->status = 'New task';
+
+        $this->categories = new ArrayCollection();
     }
 
     /**

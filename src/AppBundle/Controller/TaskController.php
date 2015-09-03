@@ -27,24 +27,17 @@ class TaskController extends Controller
     public function indexAction(Request $request)
     {
         // TODO: init the TalkList table
-        $field = $this->getDoctrine()->getManager()->getRepository('AppBundle:TaskList')
-            ->findAll()[0]->getSortTasksBy();
+        $field = $this->getOption('sortTasksBy');
 
-        $qb = $this->getDoctrine()->getManager()->createQueryBuilder();
-        $q = $qb->select(['task'])
-           ->from('AppBundle:Task', 'task')
-           ->orderBy('task.' . $field, 'ASC')
-           ->getQuery();
-
-        $entities = $q->getResult();
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('AppBundle:Task')->getOverdueTasks($field, 'ASC');
 
         $filter_form = $this->createFormBuilder()
             ->add('check', 'checkbox', ['label' => 'uncompleted only', 'attr' => [
                 'required' => false,
             ]])
             ->add('submit', 'submit', ['label' => 'Update', 'attr' => ['class' => 'btn btn-success']])
-            ->getForm()
-        ;
+            ->getForm();
 
         $filter_form->handleRequest($request);
 
@@ -52,8 +45,7 @@ class TaskController extends Controller
 
             $data = $filter_form->getData();
             $uncompleted_only = $data['check'];
-            // *** other way: $request->request->check;
-            $this->setOption($uncompleted_only);
+            $this->setOption('showUncompletedOnly', $uncompleted_only);
         
         } else {
             $uncompleted_only = $this->getOption('showUncompletedOnly');
@@ -71,17 +63,27 @@ class TaskController extends Controller
      * Read options from DB
      */
     protected function getOption($option) {
-        $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository('AppBundle:TaskList')->findAll();
+        $rep = $this->getDoctrine()->getManager()->getRepository('AppBundle:TaskList');
 
-        return $entity[0]->getShowUncompletedOnly();
+        switch ($option) {
+            case 'showUncompletedOnly':
+                return $rep->getShowUncompletedOnly();
+            case 'sortTasksBy':
+                return $rep->getSortTasksBy();
+        }
     }
 
-    protected function setOption($value) {
-        $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository('AppBundle:TaskList')->findAll()[0];
-        $entity->setShowUncompletedOnly($value);
-        $em->flush();        
+    protected function setOption($option, $value) {
+        $rep = $this->getDoctrine()->getManager()->getRepository('AppBundle:TaskList');
+
+        switch ($option) {
+            case 'showUncompletedOnly':
+                $rep->setShowUncompletedOnly($value);
+                break;
+            case 'sortTasksBy':
+                $rep->setSortTasksBy($value);
+                break;
+        }
     }
 
     /**
@@ -102,8 +104,6 @@ class TaskController extends Controller
 
         if ( $form->isSubmitted() ) {
             
-            $entity->setStatus('New task');
-            $entity->setCompleted(false);
             $entity->setStartedDate(new \DateTime('today'));
 
             if ( $form->isValid() ) {
@@ -111,7 +111,7 @@ class TaskController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $this->addFlash('notice', 'New task has been added');
+                $this->addFlash('notice', 'Notice: New task has been added');
                 return $this->redirectToRoute('task');
             } else {
                 $this->addFlash('error', 'Error: cannot add the new task');            
@@ -153,7 +153,7 @@ class TaskController extends Controller
 
         if ($form->isValid()) {
             $em->flush();
-            $this->addFlash('notice', 'The task has been updated');
+            $this->addFlash('notice', 'Notice: the task has been updated');
             return $this->redirectToRoute('task');
         }
 
@@ -181,7 +181,7 @@ class TaskController extends Controller
         $em->remove($entity);
         $em->flush();
 
-        $this->addFlash('notice', 'The task has been deleted');
+        $this->addFlash('notice', 'Notice: the task has been deleted');
 
         return $this->redirectToRoute('task');
     }
@@ -248,12 +248,7 @@ class TaskController extends Controller
      * @Route("/task/sort/{field}", name="sort_tasks")
      */
     public function sortTaskBy($field) {
-
-        $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository('AppBundle:TaskList')->findAll()[0];
-        $entity->setSortTasksBy($field);
-        $em->flush();
-
+        $this->setOption('sortTasksBy', $field);
         return $this->redirectToRoute('task');
     }
 }
