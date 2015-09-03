@@ -1,5 +1,5 @@
 r47717_main:
-    resource: "@R47717MainBundle/Controller/"
+    resource: "@AppBundle/Controller/"
     type:     annotation
     prefix:   /
 
