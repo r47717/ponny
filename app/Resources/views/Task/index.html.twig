@@ -3,6 +3,17 @@
 {% block title %}All Tasks List{% endblock %}
 
 {% block body -%}
+    {% block filter_form %}
+    <div class="filter-form">
+        {{ form_start(filter_form, {'attr': {'novalidate': 'novalidate'}}) }}
+        {{ form_label(filter_form.category) }}
+        {{ form_widget(filter_form.category) }}
+        {{ form_widget(filter_form.uncompletedOnly) }}
+        {{ form_label(filter_form.uncompletedOnly) }}
+        {{ form_widget(filter_form.submit) }}
+        {{ form_end(filter_form) }}
+    </div>
+    {% endblock %}
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -15,8 +26,8 @@
             </tr>
         </thead>
         <tbody>
-        {% for entity in entities %}
-        {% if not entity.completed or not uncompleted_only and entity.completed %}
+        {% for entity in entities %} 
+        {#{% if not entity.completed or not filter_form.vars.value.uncompletedOnly and entity.completed %}#}
             {% if not entity.completed and (entity.isTaskOverdue()) %}
             <tr class='overdue-row'>
             {% else %}
@@ -40,14 +51,8 @@
                     <a href="{{ path('task_delete', {'id': entity.id}) }}"><span class="glyphicon glyphicon-trash"></span></a>
                 </td>
             </tr>
-        {% endif %}
+        {# {% endif %} #}
         {% endfor %}
         </tbody>
     </table>
-    {% block filter_form %}
-        {{ form_start(filter_form, {'attr': {'novalidate': 'novalidate'}}) }}
-        {{ form_widget(filter_form.check) }}
-        {{ form_label(filter_form.check) }}
-        {{ form_rest(filter_form) }}
-    {% endblock %}
 {% endblock %}

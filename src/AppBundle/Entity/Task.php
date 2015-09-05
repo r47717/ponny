@@ -15,17 +15,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Task
 {
     /**
-     * @ORM\ManyToMany(targetEntity="Category")
+     * @ORM\ManyToMany(targetEntity="Category", inversedBy="tasks")
      */
     protected $categories;
-
-    public function getCategories() {
-        return $this->categories;
-    }
-
-    public function addCategory($category) {
-        $categories[] = $category;
-    }
 
     public function __construct() {
         $this->due = null; //new \DateTime('tomorrow');
@@ -274,5 +266,38 @@ class Task
 
     public function isDueThisMonth($date) {
         return ($this->due->format('m') == $date->format('m'));
+    }
+
+    /**
+     * Remove categories
+     *
+     * @param \AppBundle\Entity\Category $categories
+     */
+    public function removeCategory(\AppBundle\Entity\Category $categories)
+    {
+        $this->categories->removeElement($categories);
+    }
+
+    /**
+     * Add categories
+     *
+     * @param \AppBundle\Entity\Category $categories
+     * @return Task
+     */
+    public function addCategory(\AppBundle\Entity\Category $categories)
+    {
+        $this->categories[] = $categories;
+
+        return $this;
+    }
+
+    /**
+     * Get categories
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getCategories()
+    {
+        return $this->categories;
     }
 }

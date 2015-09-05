@@ -19,6 +19,7 @@ class TaskType extends AbstractType
             ->add('description', 'textarea')
             //->add('status')
             ->add('due', 'date')
+            //->add('categories')
             //->add('completed')
             //->add('startedDate')
         ;

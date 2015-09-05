@@ -30,13 +30,22 @@ class TaskController extends Controller
         $field = $this->getOption('sortTasksBy');
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppBundle:Task')->getOverdueTasks($field, 'ASC');
+
+        $catList = $em->getRepository('AppBundle:Category')->getNames();
+        $catList[0] = '<All>';
 
         $filter_form = $this->createFormBuilder()
-            ->add('check', 'checkbox', ['label' => 'uncompleted only', 'attr' => [
+            ->add('uncompletedOnly', 'checkbox', ['label' => 'uncompleted only', 'attr' => [
                 'required' => false,
             ]])
-            ->add('submit', 'submit', ['label' => 'Update', 'attr' => ['class' => 'btn btn-success']])
+            ->add('category', 'choice', [
+                'choices' => $catList,
+                'multiple' => false,
+                'expanded' => false,
+                'label' => 'Category',
+                'placeholder' => false,
+            ])
+            ->add('submit', 'submit', ['label' => 'Update', 'attr' => ['class' => 'btn-sm btn-success']])
             ->getForm();
 
         $filter_form->handleRequest($request);
@@ -44,17 +53,26 @@ class TaskController extends Controller
         if ($filter_form->isSubmitted()) {
 
             $data = $filter_form->getData();
-            $uncompleted_only = $data['check'];
-            $this->setOption('showUncompletedOnly', $uncompleted_only);
+            $this->setOption('showUncompletedOnly', $data['uncompletedOnly']);
+            $this->setOption('showCategory', $data['category']);
+            $showUncompletedOnly = $data['uncompletedOnly'];
+            $showCategory = $data['category'];
         
         } else {
-            $uncompleted_only = $this->getOption('showUncompletedOnly');
-            $filter_form->setData(['check' => $uncompleted_only]);
+            $showUncompletedOnly = $this->getOption('showUncompletedOnly');
+            $showCategory = $this->getOption('showCategory');
+            $filter_form->setData([
+                'uncompletedOnly' => $showUncompletedOnly, 
+                'category' => $showCategory,
+            ]);
         }
+
+        // get entities using the filters
+
+        $entities = $em->getRepository('AppBundle:Task')->getTasks($showUncompletedOnly, $showCategory, $field, 'ASC');
 
         return $this->render('Task/index.html.twig', [
             'entities' => $entities,
-            'uncompleted_only' => $uncompleted_only, 
             'filter_form' => $filter_form->createView(),
         ]);
     }
@@ -63,18 +81,24 @@ class TaskController extends Controller
      * Read options from DB
      */
     protected function getOption($option) {
-        $rep = $this->getDoctrine()->getManager()->getRepository('AppBundle:TaskList');
+        $em = $this->getDoctrine()->getManager();
+        $rep = $em->getRepository('AppBundle:TaskList');
 
         switch ($option) {
             case 'showUncompletedOnly':
                 return $rep->getShowUncompletedOnly();
             case 'sortTasksBy':
                 return $rep->getSortTasksBy();
+            case 'showCategory':
+                return $rep->getShowCategory();
         }
+
+        $em->flush();
     }
 
     protected function setOption($option, $value) {
-        $rep = $this->getDoctrine()->getManager()->getRepository('AppBundle:TaskList');
+        $em = $this->getDoctrine()->getManager();
+        $rep = $em->getRepository('AppBundle:TaskList');
 
         switch ($option) {
             case 'showUncompletedOnly':
@@ -83,7 +107,12 @@ class TaskController extends Controller
             case 'sortTasksBy':
                 $rep->setSortTasksBy($value);
                 break;
+            case 'showCategory':
+                $rep->setShowCategory($value);
+                break;
         }
+
+        $em->flush();
     }
 
     /**

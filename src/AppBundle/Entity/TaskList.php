@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use \Doctrine\Common\Util\Debug;
 
 /**
  * TaskList
@@ -40,6 +41,13 @@ class TaskList
      * @ORM\Column(name="sortTasksBy", type="string")
      */
     private $sortTasksBy;
+
+    /**
+     * @var integer
+     * @ORM\Column(name="showCategory", type="integer", nullable=true)
+     */
+    private $showCategory;
+
 
     /**
      * Get id
@@ -118,5 +126,28 @@ class TaskList
     public function getSortTasksBy()
     {
         return $this->sortTasksBy;
+    }
+
+    /**
+     * Set showCategory
+     *
+     * @param integer $showCategory
+     * @return TaskList
+     */
+    public function setShowCategory($showCategory)
+    {
+        $this->showCategory = $showCategory;
+
+        return $this;
+    }
+
+    /**
+     * Get showCategory
+     *
+     * @return integer
+     */
+    public function getShowCategory()
+    {
+        return $this->showCategory;
     }
 }

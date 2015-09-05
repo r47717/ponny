@@ -11,16 +11,26 @@ class TaskListRepository extends EntityRepository {
 	public function setSortTasksBy($field) {
 		$entity = $this->findAll()[0];
 		$entity->setSortTasksBy($field);
-		$this->flush();
 	}
+
+    public function getShowUncompletedOnly() {
+		$entity = $this->findAll()[0];
+        return $entity->getShowUncompletedOnly();
+    }
 
 	public function setShowUncompletedOnly($flag) {
 		$entity = $this->findAll()[0];
         $entity->setShowUncompletedOnly($flag);
     }
 
-    public function getShowUncompletedOnly() {
+    public function getShowCategory() {
 		$entity = $this->findAll()[0];
-        return $entity->getShowUncompletedOnly();
+        return $entity->getShowCategory();
     }
+
+	public function setShowCategory($name) {
+		$entity = $this->findAll()[0];
+        $entity->setShowCategory($name);
+    }
+
 }

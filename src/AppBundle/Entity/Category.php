@@ -9,12 +9,12 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Category
  *
  * @ORM\Table()
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="CategoryRepository")
  */
 class Category
 {
     /**
-     * @ORM\ManyToMany(targetEntity="Task")
+     * @ORM\ManyToMany(targetEntity="Task", mappedBy="categories")
      */
     protected $tasks;
 
@@ -23,13 +23,6 @@ class Category
         $this->tasks = new ArrayCollection();
     }
 
-    public function getTasks() {
-        return $this->tasks;
-    }
-
-    public function addTask($task) {
-        $this->tasks[] = $task;
-    }
 
     /**
      * @var integer
@@ -80,4 +73,39 @@ class Category
         return $this->name;
     }
 
+
+    /**
+     * Add tasks
+     *
+     * @param \AppBundle\Entity\Task $tasks
+     * @return Category
+     */
+    public function addTask(\AppBundle\Entity\Task $task)
+    {
+        $this->tasks[] = $task;
+        $task->addCategory($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove tasks
+     *
+     * @param \AppBundle\Entity\Task $tasks
+     */
+    public function removeTask(\AppBundle\Entity\Task $task)
+    {
+        $this->tasks->removeElement($task);
+        $task->removeCategory($this);
+    }
+
+    /**
+     * Get tasks
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getTasks()
+    {
+        return $this->tasks;
+    }
 }
