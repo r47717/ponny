@@ -126,7 +126,6 @@ class TaskController extends Controller
         $entity = new Task();
         $form   = $this->createForm(new TaskType(), $entity, array(
             'action' => $this->generateUrl('task_new'),
-            'method' => 'POST',
         ));
         $form->add('submit', 'submit', ['label' => 'Create', 'attr' => ['class' => 'btn btn-success']]);
         $form->handleRequest($request);
@@ -169,33 +168,25 @@ class TaskController extends Controller
             throw $this->createNotFoundException('Unable to find Task entity.');
         }
 
-        $form = $this->createFormBuilder($entity)
+        $form = $this->createForm(new TaskType(), $entity, array(
+            'action' => $this->generateUrl('task_edit', ['id' => $entity->getId()]),
+        ))
             ->add('id', 'text', ['disabled' => true])
-            ->add('task', 'text')
-            ->add('priority', 'choice', [
-                'choices' => [1=>1,2,3,4,5],
-                'multiple' => false,
-                'expanded' => false,
-                'placeholder' => false,
-            ])
-            ->add('description', 'textarea')
             ->add('completed', 'checkbox')
-            ->add('status', 'text')
-            ->add('due', 'date')
-            ->add('categories', 'entity', [
-                'class' => 'AppBundle:Category',
-                'expanded' => true,
-                'multiple' => true,
-            ])
-            ->add('submit', 'submit', ['label' => 'Update', 'attr' => ['class' => 'btn-lg btn-success']])
-            ->getForm();
+            ->add('update', 'submit', ['label' => 'Update', 'attr' => ['class' => 'btn btn-success']])
+            ->add('delete', 'submit', ['label' => 'Delete task', 'attr' => ['class' => 'btn btn-danger pull-right']]);
 
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em->flush();
-            $this->addFlash('notice', 'Notice: the task has been updated');
-            return $this->redirectToRoute('task');
+
+          if ($form->get('delete')->isClicked()) {
+              return $this->redirectToRoute('task_delete', ['id' => $entity->getId()]);
+          } else {
+              $em->flush();
+              $this->addFlash('notice', 'Notice: the task has been updated');
+              return $this->redirectToRoute('task');
+          }
         }
 
         return $this->render('Task/edit.html.twig', [

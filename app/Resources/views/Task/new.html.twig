@@ -19,6 +19,10 @@
 			<td>{{ form_widget(form.priority) }}</td>
 		</tr>
 		<tr>
+			<td>{{ form_label(form.status) }}</td>
+			<td>{{ form_widget(form.status) }}</td>
+		</tr>
+		<tr>
 			<td>{{ form_label(form.due, 'Due Date') }}</td>
 			<td>
 			{% if form.due is null %}

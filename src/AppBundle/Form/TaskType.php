@@ -17,7 +17,7 @@ class TaskType extends AbstractType
         $builder
             ->add('task')
             ->add('description', 'textarea')
-            //->add('status')
+            ->add('status')
             ->add('due', 'date')
             ->add('categories', 'entity', [
                 'class' => 'AppBundle:Category',
@@ -30,7 +30,6 @@ class TaskType extends AbstractType
                 'expanded' => false,
                 'placeholder' => false,
             ])
-            //->add('startedDate')
         ;
     }
     

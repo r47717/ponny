@@ -17,5 +17,7 @@
 	    <tr><td>{{ form_label(form.due) }}</td><td>{{ form_widget(form.due) }}</td></tr>
 	    <tr><td>{{ form_label(form.categories, 'Categories') }}</td><td>{{ form_widget(form.categories) }}</td></tr>
     </table>
-    {{ form_rest(form) }}
+    {{ form_widget(form.update) }}
+    {{ form_widget(form.delete) }}
+    {{ form_end(form) }}
 {% endblock %}

@@ -20,7 +20,7 @@ class Task
     protected $categories;
 
     public function __construct() {
-        $this->due = null; //new \DateTime('tomorrow');
+        $this->due = (new \DateTime('tomorrow'))->add(new \DateInterval('P1Y'));
         $this->startedDate = new \DateTime('today');
         $this->completed = false;
         $this->status = 'New task';
@@ -306,4 +306,28 @@ class Task
     {
         return $this->categories;
     }
+
+    /**
+     * Set priority
+     *
+     * @param integer $priority
+     * @return Task
+     */
+    public function setPriority($priority)
+    {
+        $this->priority = $priority;
+
+        return $this;
+    }
+
+    /**
+     * Get priority
+     *
+     * @return integer 
+     */
+    public function getPriority()
+    {
+        return $this->priority;
+    }
+
 }
