@@ -23,6 +23,9 @@ class Category
         $this->tasks = new ArrayCollection();
     }
 
+    public function __toString() {
+        return $this->name;
+    }
 
     /**
      * @var integer

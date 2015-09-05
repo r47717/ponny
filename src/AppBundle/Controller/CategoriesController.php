@@ -47,7 +47,7 @@ class CategoriesController extends Controller
         }
 
         $rep = $this->getDoctrine()->getManager()->getRepository('AppBundle:Category');
-        $categories = $rep->findAll();
+        $categories = $rep->tasksCount();
  
         return $this->render('Categories/index.html.twig', [
         	'add_form' => $addForm->createView(),

@@ -170,11 +170,17 @@ class TaskController extends Controller
         }
 
         $form = $this->createFormBuilder($entity)
+            ->add('id', 'text', ['disabled' => true])
             ->add('task', 'text')
             ->add('description', 'textarea')
             ->add('completed', 'checkbox')
             ->add('status', 'text')
             ->add('due', 'date')
+            ->add('categories', 'entity', [
+                'class' => 'AppBundle:Category',
+                'expanded' => true,
+                'multiple' => true,
+            ])
             ->add('submit', 'submit', ['label' => 'Update', 'attr' => ['class' => 'btn-lg btn-success']])
             ->getForm();
 

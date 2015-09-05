@@ -12,10 +12,10 @@
 	</tr>
 	{% for item in categories %}
 		<tr>
-			<td>{{ item.id }}</td>
-			<td>{{ item.name }}</td>
-			<td></td>
-			<td><a href="{{ path('category_delete', {'id': item.id}) }}"><span class="glyphicon glyphicon-remove"></span></a></td>
+			<td>{{ item.obj.id }}</td>
+			<td>{{ item.obj.name }}</td>
+			<td>{{ item.count }}</td>
+			<td><a href="{{ path('category_delete', {'id': item.obj.id}) }}"><span class="glyphicon glyphicon-remove"></span></a></td>
 		</tr>
 	{% endfor %}
 </table>
