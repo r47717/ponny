@@ -24,6 +24,7 @@ class Task
         $this->startedDate = new \DateTime('today');
         $this->completed = false;
         $this->status = 'New task';
+        $this->priority = 1;
 
         $this->categories = new ArrayCollection();
     }
@@ -57,6 +58,11 @@ class Task
      * @ORM\Column(name="status", type="string", length=40, nullable=true)
      */
     private $status;
+
+    /**
+     * @ORM\Column(name="priority", type="smallint", nullable=true)
+     */
+    private $priority;
 
     /**
      * @var \DateTime

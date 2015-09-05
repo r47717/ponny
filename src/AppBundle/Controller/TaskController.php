@@ -172,6 +172,12 @@ class TaskController extends Controller
         $form = $this->createFormBuilder($entity)
             ->add('id', 'text', ['disabled' => true])
             ->add('task', 'text')
+            ->add('priority', 'choice', [
+                'choices' => [1=>1,2,3,4,5],
+                'multiple' => false,
+                'expanded' => false,
+                'placeholder' => false,
+            ])
             ->add('description', 'textarea')
             ->add('completed', 'checkbox')
             ->add('status', 'text')

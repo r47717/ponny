@@ -19,8 +19,17 @@ class TaskType extends AbstractType
             ->add('description', 'textarea')
             //->add('status')
             ->add('due', 'date')
-            //->add('categories')
-            //->add('completed')
+            ->add('categories', 'entity', [
+                'class' => 'AppBundle:Category',
+                'expanded' => true,
+                'multiple' => true,
+            ])
+            ->add('priority', 'choice', [
+                'choices' => [1=>1,2,3,4,5],
+                'multiple' => false,
+                'expanded' => false,
+                'placeholder' => false,
+            ])
             //->add('startedDate')
         ;
     }

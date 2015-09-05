@@ -18,6 +18,7 @@
         <thead>
             <tr>
                 <th><a href="{{ path('sort_tasks', {'field': 'task'}) }}">Task</a></th>
+                <th><a href="{{ path('sort_tasks', {'field': 'priority'}) }}">Priority</a></th>
                 <th><a href="{{ path('sort_tasks', {'field': 'status'}) }}">Status</a></th>
                 <th><a href="{{ path('sort_tasks', {'field': 'startedDate'}) }}">Start Date</a></th>
                 <th><a href="{{ path('sort_tasks', {'field': 'due'}) }}">Due Date</a></th>
@@ -38,6 +39,7 @@
                 {% else %}
                     <td><a href="{{ path('task_edit', { 'id': entity.id }) }}">{{ entity.task }}</a></td>
                 {% endif %}
+                <td>{{ entity.priority }}</td>
                 <td>{{ entity.status }}</td>
                 <td>{% if entity.startedDate %}{{ entity.startedDate|date('d-m-Y') }}{% endif %}</td>
                 <td>{% if entity.due %}{{ entity.due|date('d-m-Y') }}{% endif %}</td>
