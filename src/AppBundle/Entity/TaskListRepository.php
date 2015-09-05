@@ -23,6 +23,16 @@ class TaskListRepository extends EntityRepository {
         $entity->setShowUncompletedOnly($flag);
     }
 
+    public function getShowHighPriorityOnly() {
+		$entity = $this->findAll()[0];
+        return $entity->getShowHighPriorityOnly();
+    }
+
+	public function setShowHighPriorityOnly($flag) {
+		$entity = $this->findAll()[0];
+        $entity->setShowHighPriorityOnly($flag);
+    }
+
     public function getShowCategory() {
 		$entity = $this->findAll()[0];
         return $entity->getShowCategory();

@@ -45,6 +45,9 @@ class TaskController extends Controller
                 'label' => 'Category',
                 'placeholder' => false,
             ])
+            ->add('highPriorityOnly', 'checkbox', ['label' => 'high priority only', 'attr' => [
+                'required' => false,
+            ]])
             ->add('submit', 'submit', ['label' => 'Update', 'attr' => ['class' => 'btn-sm btn-success']])
             ->getForm();
 
@@ -54,22 +57,27 @@ class TaskController extends Controller
 
             $data = $filter_form->getData();
             $this->setOption('showUncompletedOnly', $data['uncompletedOnly']);
+            $this->setOption('showHighPriorityOnly', $data['highPriorityOnly']);
             $this->setOption('showCategory', $data['category']);
             $showUncompletedOnly = $data['uncompletedOnly'];
+            $showHighPriorityOnly = $data['highPriorityOnly'];
             $showCategory = $data['category'];
         
         } else {
             $showUncompletedOnly = $this->getOption('showUncompletedOnly');
+            $showHighPriorityOnly = $this->getOption('showHighPriorityOnly');
             $showCategory = $this->getOption('showCategory');
             $filter_form->setData([
-                'uncompletedOnly' => $showUncompletedOnly, 
+                'uncompletedOnly' => $showUncompletedOnly,
+                'highPriorityOnly' => $showHighPriorityOnly,
                 'category' => $showCategory,
             ]);
         }
 
         // get entities using the filters
 
-        $entities = $em->getRepository('AppBundle:Task')->getTasks($showUncompletedOnly, $showCategory, $field, 'ASC');
+        $entities = $em->getRepository('AppBundle:Task')->getTasks($showUncompletedOnly, $showCategory, 
+            $showHighPriorityOnly, $field, 'ASC');
 
         return $this->render('Task/index.html.twig', [
             'entities' => $entities,
@@ -87,6 +95,8 @@ class TaskController extends Controller
         switch ($option) {
             case 'showUncompletedOnly':
                 return $rep->getShowUncompletedOnly();
+            case 'showHighPriorityOnly':
+                return $rep->getShowHighPriorityOnly();
             case 'sortTasksBy':
                 return $rep->getSortTasksBy();
             case 'showCategory':
@@ -103,6 +113,9 @@ class TaskController extends Controller
         switch ($option) {
             case 'showUncompletedOnly':
                 $rep->setShowUncompletedOnly($value);
+                break;
+            case 'showHighPriorityOnly':
+                $rep->setShowHighPriorityOnly($value);
                 break;
             case 'sortTasksBy':
                 $rep->setSortTasksBy($value);

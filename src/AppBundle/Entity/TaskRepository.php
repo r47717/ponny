@@ -8,13 +8,19 @@ class TaskRepository extends EntityRepository {
 	/**
 	 * TODO: this should be improved using DQL and JOIN
 	 */
-	public function getTasks($showUncompletedOnly, $showCategory, $orderBy = 'task', $order = 'ASC') {
+	public function getTasks($showUncompletedOnly, $showCategory, $showHighPriorityOnly, 
+        $orderBy = 'task', $order = 'ASC') 
+    {
 		$qb = $this->getEntityManager()->createQueryBuilder();
         $qb = $qb->select(['task'])
            ->from('AppBundle:Task', 'task');
 
         if ($showUncompletedOnly) {
         	$qb = $qb->where('task.completed = 0');
+        }
+
+        if ($showHighPriorityOnly) {
+            $qb = $qb->andWhere('task.priority < 3');
         }
 
         if ($showCategory != 0) {

@@ -37,6 +37,13 @@ class TaskList
     private $showUncompletedOnly;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="showHighPriorityOnly", type="boolean")
+     */
+    private $showHighPriorityOnly;
+
+    /**
      * @var string
      * @ORM\Column(name="sortTasksBy", type="string")
      */
@@ -103,6 +110,29 @@ class TaskList
     public function getShowUncompletedOnly()
     {
         return $this->showUncompletedOnly;
+    }
+
+    /**
+     * Set showHighPriorityOnly
+     *
+     * @param boolean $showHighPriorityOnly
+     * @return TaskList
+     */
+    public function setShowHighPriorityOnly($showHighPriorityOnly)
+    {
+        $this->showHighPriorityOnly = $showHighPriorityOnly;
+
+        return $this;
+    }
+
+    /**
+     * Get showHighPriorityOnly
+     *
+     * @return boolean 
+     */
+    public function getShowHighPriorityOnly()
+    {
+        return $this->showHighPriorityOnly;
     }
 
     /**
