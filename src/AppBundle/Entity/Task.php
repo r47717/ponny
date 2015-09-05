@@ -271,7 +271,7 @@ class Task
     }
 
     public function isDueThisMonth($date) {
-        return ($this->due->format('m') == $date->format('m'));
+        return ($this->due->format('m.Y') == $date->format('m.Y'));
     }
 
     /**
