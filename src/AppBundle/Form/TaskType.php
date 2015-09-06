@@ -18,7 +18,17 @@ class TaskType extends AbstractType
             ->add('task')
             ->add('description', 'textarea')
             ->add('status')
-            ->add('due', 'date')
+            ->add('due', 'genemu_jquerydate', [
+                'widget' => 'single_text',
+                'label' => 'label',
+                'attr' => ['class' => 'datepicker'],
+                'format' => 'dd/MM/yyyy',
+                'configs' => [          
+                    'changeMonth' => true,
+                    'changeYear' => true,
+                    'maxDate' => 0,                        
+                ]
+            ])
             ->add('categories', 'entity', [
                 'class' => 'AppBundle:Category',
                 'expanded' => true,

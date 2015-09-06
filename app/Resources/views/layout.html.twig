@@ -8,7 +8,8 @@
     <title>Ponny Task Application</title>
     <link rel="icon" href="{{ asset('favicon.ico') }}">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/themes/base/jquery-ui.css" type="text/css" media="all" />
+     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
   </head>
 
   <body>
@@ -74,8 +75,14 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
     {% block chart_scripts %}
         {# stats override this block inserting highchart scripts #}
     {% endblock %}
+    <script>
+      $(function(){
+          $(".datepicker").datepicker();
+      });
+    </script>
   </body>
 </html>

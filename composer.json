@@ -20,7 +20,8 @@
         "sensio/distribution-bundle": "~4.0",
         "sensio/framework-extra-bundle": "~3.0,>=3.0.2",
         "incenteev/composer-parameter-handler": "~2.0",
-        "ob/highcharts-bundle": "*"
+        "ob/highcharts-bundle": "*",
+        "genemu/form-bundle": "2.2.*"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"
@@ -53,7 +54,7 @@
     },
     "extra": {
         "symfony-app-dir": "app",
-        "symfony-web-dir": "web",
+        "symfony-web-dir": "public_html",
         "symfony-assets-install": "relative",
         "incenteev-parameters": {
             "file": "app/config/parameters.yml"
