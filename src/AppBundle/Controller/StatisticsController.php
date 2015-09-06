@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use R47717\MainBundle\Entity\Task;
 use R47717\MainBundle\Form\TaskType;
 use \Doctrine\Common\Util\Debug;
+use Ob\HighchartsBundle\Highcharts\Highchart;
 
 /**
  *
@@ -60,8 +61,30 @@ class StatisticsController extends Controller {
         ];
 
         return $this->render('Task/stat.html.twig', [
-            'stat' => $stat,
+            'chart' => $this->buildChart($stat),
         ]);
+    }
+
+    public function buildChart($data) {
+        $series = [ 
+            ['name' => 'Total tasks',       'data' => [$data['all']]],
+            ['name' => 'Completed',         'data' => [$data['completed']]],
+            ['name' => 'Completed on-time', 'data' => [$data['completed_ontime']]],
+            ['name' => 'Completed overdue', 'data' => [$data['completed_overdue']]],
+            ['name' => 'Pending',           'data' => [$data['pending']]],
+            ['name' => 'Pending on-time',   'data' => [$data['pending_ontime']]],
+            ['name' => 'Pending overdue',   'data' => [$data['pending_overdue']]],
+        ];
+
+        $ob = new Highchart();
+        $ob->chart->renderTo('stat-charts');  // The #id of the div where to render the chart
+        $ob->chart->type('column');
+        $ob->title->text('Task Statistics');
+        $ob->xAxis->title(['text'  => "Parameter"]);
+        $ob->yAxis->title(['text'  => "Value"]);
+        $ob->series($series);
+
+        return $ob;
     }
 
 }

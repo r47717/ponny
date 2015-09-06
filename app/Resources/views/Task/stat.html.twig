@@ -3,7 +3,7 @@
 {% block title %}Task Statistics{% endblock %}
 
 {% block body %}
-<table class='stat-table'>
+{# <table class='stat-table'>
 	<tr>
 		<td>Total number of tasks</td>
 		<td>{{ stat.all }}</td>
@@ -33,4 +33,13 @@
 		<td>{{ stat.pending_overdue }}</td>
 	</tr>
 </table>
+#}
+<div id="stat-charts" style="width: 600px; height: 400px">
+</div>
+{% endblock %}
+
+{% block chart_scripts %}
+	<script src="https://code.highcharts.com/4.1.8/highcharts.js"></script>
+	<script src="https://code.highcharts.com/4.1.8/modules/exporting.js"></script>
+	<script>{{ chart(chart) }}</script>
 {% endblock %}

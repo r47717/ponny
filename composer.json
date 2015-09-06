@@ -1,5 +1,5 @@
 {
-    "name": "r47717/telecom2",
+    "name": "r47717/ponny",
     "license": "proprietary",
     "type": "project",
     "autoload": {
@@ -19,7 +19,8 @@
         "symfony/monolog-bundle": "~2.4",
         "sensio/distribution-bundle": "~4.0",
         "sensio/framework-extra-bundle": "~3.0,>=3.0.2",
-        "incenteev/composer-parameter-handler": "~2.0"
+        "incenteev/composer-parameter-handler": "~2.0",
+        "ob/highcharts-bundle": "*"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"

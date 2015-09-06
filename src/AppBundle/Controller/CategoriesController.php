@@ -13,7 +13,6 @@ use \Doctrine\Common\Util\Debug;
 
 class CategoriesController extends Controller
 {
-    private $categories = [];
     /**
      * @Route("/categories", name="categories")
      */
@@ -76,12 +75,6 @@ class CategoriesController extends Controller
         $entities = $this->getDOctrine()->getManager()->getRepository('AppBundle:Category')->findByName($name);
     	return !empty($entities);
     }
-
-    public function countTasksInCategory($id) {
-        $em = $this->getDoctrine()->getManager();
-/*        $qb = $em->createQueryBuilder()
-            ->
-*/    }
 
     /**
      * @Route("/markers", name="markers")

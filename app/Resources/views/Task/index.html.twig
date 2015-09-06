@@ -6,6 +6,7 @@
     {% block filter_form %}
     <div class="filter-form">
         {{ form_start(filter_form, {'attr': {'novalidate': 'novalidate'}}) }}
+        <span class="glyphicon glyphicon-filter">
         {{ form_label(filter_form.category) }}
         {{ form_widget(filter_form.category) }}
         {{ form_widget(filter_form.uncompletedOnly) }}
