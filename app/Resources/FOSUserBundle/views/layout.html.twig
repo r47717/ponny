@@ -1,0 +1,15 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Login{% endblock %}
+
+{% block body %}
+    {% block fos_user_content %}
+	    {{ form_start(form1werwerwerwer) }}
+		{{ form_label(form.username)}}
+		{{ form_widget(form.username)}}
+		{{ form_label(form.plainPassword)}}
+		{{ form_widget(form.plainPassword)}}
+		{{ form_end(form) }}
+
+    {% endblock %}
+{% endblock %}
