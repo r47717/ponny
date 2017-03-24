@@ -1,1 +1,0 @@
-{ parameters: { database_host: 127.0.0.1, database_port: null, database_name: ponny, database_user: root, database_password: r47717, mailer_transport: smtp, mailer_host: 127.0.0.1, mailer_user: null, mailer_password: null, secret: 52a5a10f275f6e5af6e17f6fce2da9ec9, database_driver: pdo_mysql, database_path: null } }
