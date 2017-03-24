@@ -11,6 +11,8 @@ use AppBundle\Entity\Task;
 use AppBundle\Form\TaskType;
 use \Doctrine\Common\Util\Debug;
 
+use AppBundle\Form\TaskFilterType;
+
 
 /**
  * Task controller.
@@ -34,28 +36,9 @@ class TaskController extends BaseController
         $catList = $this->categories()->getNames();
         $catList[0] = '<All>'; // TODO
 
-        $filter_form = $this->createFormBuilder()
-            ->add('uncompletedOnly', 'checkbox', [
-                'label' => 'uncompleted only', 
-                'attr' => [
-                  'required' => false,
-                ]
-            ])
-            ->add('category', 'choice', [
-                'choices' => $catList,
-                'multiple' => false,
-                'expanded' => false,
-                'label' => 'Category',
-                'placeholder' => false,
-            ])
-            ->add('highPriorityOnly', 'checkbox', [
-                'label' => 'high priority only', 
-                'attr' => [
-                  'required' => false,
-                ],
-            ])
-            ->add('submit', 'submit', ['label' => 'Update', 'attr' => ['class' => 'btn-sm btn-success']])
-            ->getForm();
+        $filter_form = $this->createForm(new TaskFilterType(), null, [
+            'catList' => $catList,
+        ]);
 
         $filter_form->handleRequest($request);
 
@@ -145,23 +128,33 @@ class TaskController extends BaseController
         $form = $this->createForm(new TaskType(), $entity, array(
             'action' => $this->generateUrl('task_edit', ['id' => $entity->getId()]),
         ))
-            ->add('id', 'text', ['disabled' => true])
+            ->add('id', 'text', [
+                'disabled' => true,
+                'attr' => [
+                  'class' => 'form-control',
+                ]
+            ])
             ->add('completed', 'checkbox')
             ->add('update', 'submit', ['label' => 'Update', 'attr' => ['class' => 'btn btn-success']])
             ->add('delete', 'submit', ['label' => 'Delete task', 'attr' => ['class' => 'btn btn-danger pull-right']]);
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted()) {
+          if ($form->isValid()) {
 
-          if ($form->get('delete')->isClicked()) {
-              return $this->redirectToRoute('task_delete', ['id' => $entity->getId()]);
+            if ($form->get('delete')->isClicked()) {
+                return $this->redirectToRoute('task_delete', ['id' => $entity->getId()]);
+            }
+
+            $this->em()->persist($entity);
+            $this->em()->flush();
+            $this->addFlash('notice', 'Notice: the task has been updated');
+            
+            return $this->redirectToRoute('task');
+          } else {
+            $this->addFlash('error', 'Form data is invalid');
           }
-
-          $this->em()->flush();
-          $this->addFlash('notice', 'Notice: the task has been updated');
-          
-          return $this->redirectToRoute('task');
         }
 
         return $this->render('Task/edit.html.twig', [
@@ -241,12 +234,7 @@ class TaskController extends BaseController
      * @Route("/task/overdue", name="show_overdue")
      */
     public function showOverdue() {
-        $entities = $this->em()->createQuery('SELECT t FROM AppBundle:Task t WHERE t.due < CURRENT_DATE()
-            AND t.completed = 0')->getResult();
-
-        return $this->render('Task/overdue.html.twig', [
-            'entities' => $entities,
-        ]);
+        return $this->tasks()->showOverdue();
     }
 
 

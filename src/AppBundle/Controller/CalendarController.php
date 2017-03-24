@@ -34,6 +34,7 @@ class CalendarController extends BaseController
 				if ($task->isDueThisMonth($date)) {
 					$tasks[] = $task;
 				}
+				//var_dump($task); var_dump($date); die;
 			}
 
 			$data[] = [

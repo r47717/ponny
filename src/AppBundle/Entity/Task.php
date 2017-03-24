@@ -87,7 +87,7 @@ class Task
     protected $categories;
 
     public function __construct() {
-        $this->due = (new \DateTime('tomorrow'))->add(new \DateInterval('P1Y'));
+        $this->due = (new \DateTime('tomorrow'))->add(new \DateInterval('P1W'));
         $this->startedDate = new \DateTime('today');
         $this->completed = false;
         $this->status = 'New task';

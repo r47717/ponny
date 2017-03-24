@@ -9,47 +9,34 @@ use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use AppBundle\Entity\Category;
 use \Doctrine\Common\Util\Debug;
+use AppBundle\Form\CategoryType;
 
 
 class CategoriesController extends BaseController
 {
+
     /**
      * @Route("/categories", name="categories")
      */
     public function indexAction(Request $request) {
 
-        $addForm = $this->createFormBuilder()
-        	->add('name', 'text', [
-                'attr' => [
-                    'class' => 'form-control',
-                    'style' => 'display: inline-block; width: 250px',
-                ],
-            ])
-        	->add('submit', 'submit', [
-                'label' => 'Add',
-                'attr' => [
-                    'class' => 'btn-sm btn-success',
-                ],
-            ])
-        	->getForm();
+        $cat = new Category();
+        $addForm = $this->createForm(new CategoryType(), $cat);
 
         $addForm->handleRequest($request);
 
         if ($addForm->isSubmitted()) {
-        	$name = $addForm->getData()['name'];
+        	$name = $cat->getName();
 
         	if ($this->categories()->categoryExists($name)) {
         		$this->addFlash('error', "Error: category '$name' already exists");
         		return $this->redirectToRoute('categories');
         	}
         	
-            $cat = new Category();
-        	$cat->setName($name);
             $this->em()->persist($cat);
         	$this->em()->flush();
         	$this->addFlash('notice', "Notice: new Category '$name' has been added");
         	return $this->redirectToRoute('categories');
-
         }
 
         $categories = $this->categories()->tasksCount();

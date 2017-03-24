@@ -49,5 +49,15 @@ class TaskRepository extends EntityRepository
         return $items;
     }
 
+    public function showOverdue() {
+        $em = $this->getEntityManager();
+        $entities = $em->createQuery('SELECT t FROM AppBundle:Task t WHERE t.due < CURRENT_DATE() AND t.completed = 0')
+            ->getResult();
+
+        return $this->render('Task/overdue.html.twig', [
+            'entities' => $entities,
+        ]);
+    }
+
 }
 
