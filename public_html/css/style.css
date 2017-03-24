@@ -90,3 +90,12 @@ table {
 .footer {
 	height: 100px;
 }
+
+
+#appbundle_task_categories input[type="checkbox"] {
+	margin-right: 5px;
+}
+
+#appbundle_task_categories label {
+	margin-right: 20px;
+}

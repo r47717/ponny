@@ -11,7 +11,8 @@ use AppBundle\Form\TaskType;
 use \Doctrine\Common\Util\Debug;
 
 
-class SearchController extends Controller {
+class SearchController extends BaseController 
+{
 
 	/**
 	 * @Route("/search", name="search")
@@ -35,32 +36,17 @@ class SearchController extends Controller {
         if ($form->isValid()) {
 
         	$data = $form->getData();
-        	$entities = $this->getSearchItems($data['search_str']);
+        	$entities = $this->tasks()->getSearchItems($data['search_str']);
 
 			return $this->render('Search/index.html.twig', [
 				'entities' => $entities,
 			]);
 
-        } else {
-
-        	return $this->render('Search/form.html.twig', [
-				'form' => $form->createView(),
-			]);
         }
-	}
 
-	public function getSearchItems($search_str) {
-
-		$entities = $this->getDoctrine()->getManager()->getRepository('AppBundle:Task')->findAll();
-
-		$items = [];
-		foreach ($entities as $task) {
-			if (strpos($task->getTask(), $search_str) !== false ) {
-				$items[] = $task;
-			}
-		}
-
-		return $items;
+    	return $this->render('Search/form.html.twig', [
+			'form' => $form->createView(),
+		]);
 	}
 }
 

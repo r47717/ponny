@@ -15,13 +15,25 @@ class TaskType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('task')
-            ->add('description', 'textarea')
-            ->add('status')
+            ->add('task', 'text', [
+                'attr' => [
+                    'class' => 'form-control',
+                ]
+            ])
+            ->add('description', 'textarea', [
+                'attr' => [
+                    'class' => 'form-control',
+                ]
+            ])
+            ->add('status', 'text', [
+                'attr' => [
+                    'class' => 'form-control',
+                ]
+            ])
             ->add('due', 'genemu_jquerydate', [
                 'widget' => 'single_text',
                 'label' => 'label',
-                'attr' => ['class' => 'datepicker'],
+                'attr' => ['class' => 'datepicker form-control'],
                 'format' => 'dd/MM/yyyy',
                 'configs' => [          
                     'changeMonth' => true,
@@ -35,10 +47,14 @@ class TaskType extends AbstractType
                 'multiple' => true,
             ])
             ->add('priority', 'choice', [
-                'choices' => [1=>1,2,3,4,5],
+                'choices' => [1 => 1, 2, 3, 4, 5],
                 'multiple' => false,
                 'expanded' => false,
                 'placeholder' => false,
+                'attr' => [
+                    'class' => 'form-control',
+                    'style' => 'width: 60px',
+                ],
             ])
         ;
     }

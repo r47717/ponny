@@ -16,15 +16,15 @@ use Ob\HighchartsBundle\Highcharts\Highchart;
  *
  * @Route("/stat")
  */
-class StatisticsController extends Controller {
-
+class StatisticsController extends BaseController 
+{
 
     /**
      * @Route("/", name="show_stat")
      */
     public function showStat() {
 
-        $entities = $this->getDoctrine()->getManager()->getRepository('AppBundle:Task')->findAll();
+        $entities = $this->tasks()->findAll();
 
         $all = count($entities);
         $completed = 0; 
@@ -77,7 +77,7 @@ class StatisticsController extends Controller {
         ];
 
         $ob = new Highchart();
-        $ob->chart->renderTo('stat-charts');  // The #id of the div where to render the chart
+        $ob->chart->renderTo('stat_charts');  // The #id of the div where to render the chart
         $ob->chart->type('column');
         $ob->title->text('Task Statistics');
         $ob->xAxis->title(['text'  => "Parameter"]);

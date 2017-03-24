@@ -14,15 +14,14 @@ use \Doctrine\Common\Util\Debug;
 /**
 * @Route("/calendar")
 */
-class CalendarController extends Controller
+class CalendarController extends BaseController
 {
 	/**
 	 * @Route("/", name="calendar_show")
 	 */
 	public function showAction() {
 
-		$entities = $this->getDoctrine()->getManager()->getRepository('AppBundle:Task')
-			->findBy(['completed' => 0]);
+		$entities = $this->tasks()->findBy(['completed' => 0]);
 
 		$data = [];
 
@@ -58,3 +57,4 @@ class CalendarController extends Controller
 		]);
 	}	
 }
+

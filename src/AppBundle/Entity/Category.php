@@ -9,23 +9,10 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Category
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="CategoryRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\CategoryRepository")
  */
 class Category
 {
-    /**
-     * @ORM\ManyToMany(targetEntity="Task", mappedBy="categories")
-     */
-    protected $tasks;
-
-    public function __construct() {
-        $this->name = "Untitled";
-        $this->tasks = new ArrayCollection();
-    }
-
-    public function __toString() {
-        return $this->name;
-    }
 
     /**
      * @var integer
@@ -42,6 +29,22 @@ class Category
      * @ORM\Column(name="name", type="string", length=100)
      */
     private $name;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Task", mappedBy="categories")
+     */
+    protected $tasks;
+
+
+    public function __construct() {
+        $this->name = "Untitled";
+        $this->tasks = new ArrayCollection();
+    }
+
+
+    public function __toString() {
+        return $this->name;
+    }
 
     /**
      * Get id

@@ -10,24 +10,10 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Task
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="TaskRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\TaskRepository")
  */
 class Task
 {
-    /**
-     * @ORM\ManyToMany(targetEntity="Category", inversedBy="tasks")
-     */
-    protected $categories;
-
-    public function __construct() {
-        $this->due = (new \DateTime('tomorrow'))->add(new \DateInterval('P1Y'));
-        $this->startedDate = new \DateTime('today');
-        $this->completed = false;
-        $this->status = 'New task';
-        $this->priority = 1;
-
-        $this->categories = new ArrayCollection();
-    }
 
     /**
      * @var integer
@@ -93,6 +79,22 @@ class Task
      * @ORM\Column(name="startedDate", type="datetime", nullable=true)
      */
     private $startedDate;
+
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Category", inversedBy="tasks")
+     */
+    protected $categories;
+
+    public function __construct() {
+        $this->due = (new \DateTime('tomorrow'))->add(new \DateInterval('P1Y'));
+        $this->startedDate = new \DateTime('today');
+        $this->completed = false;
+        $this->status = 'New task';
+        $this->priority = 1;
+
+        $this->categories = new ArrayCollection();
+    }
 
 
     /**

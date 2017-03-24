@@ -11,12 +11,13 @@ use AppBundle\Entity\Task;
 use AppBundle\Form\TaskType;
 use \Doctrine\Common\Util\Debug;
 
+
 /**
  * Task controller.
  *
  * @Route("/")
  */
-class TaskController extends Controller
+class TaskController extends BaseController
 {
     /**
      * Lists all Task entities.
@@ -26,18 +27,20 @@ class TaskController extends Controller
      */
     public function indexAction(Request $request)
     {
-        // TODO: init the TalkList table
-        $field = $this->getOption('sortTasksBy');
+        $s = $this->get('session');
+        
+        $field = $s->get('sortTasksBy', 'id');
 
-        $em = $this->getDoctrine()->getManager();
-
-        $catList = $em->getRepository('AppBundle:Category')->getNames();
-        $catList[0] = '<All>';
+        $catList = $this->categories()->getNames();
+        $catList[0] = '<All>'; // TODO
 
         $filter_form = $this->createFormBuilder()
-            ->add('uncompletedOnly', 'checkbox', ['label' => 'uncompleted only', 'attr' => [
-                'required' => false,
-            ]])
+            ->add('uncompletedOnly', 'checkbox', [
+                'label' => 'uncompleted only', 
+                'attr' => [
+                  'required' => false,
+                ]
+            ])
             ->add('category', 'choice', [
                 'choices' => $catList,
                 'multiple' => false,
@@ -45,9 +48,12 @@ class TaskController extends Controller
                 'label' => 'Category',
                 'placeholder' => false,
             ])
-            ->add('highPriorityOnly', 'checkbox', ['label' => 'high priority only', 'attr' => [
-                'required' => false,
-            ]])
+            ->add('highPriorityOnly', 'checkbox', [
+                'label' => 'high priority only', 
+                'attr' => [
+                  'required' => false,
+                ],
+            ])
             ->add('submit', 'submit', ['label' => 'Update', 'attr' => ['class' => 'btn-sm btn-success']])
             ->getForm();
 
@@ -56,17 +62,17 @@ class TaskController extends Controller
         if ($filter_form->isSubmitted()) {
 
             $data = $filter_form->getData();
-            $this->setOption('showUncompletedOnly', $data['uncompletedOnly']);
-            $this->setOption('showHighPriorityOnly', $data['highPriorityOnly']);
-            $this->setOption('showCategory', $data['category']);
+            $s->set('showUncompletedOnly', $data['uncompletedOnly']);
+            $s->set('showHighPriorityOnly', $data['highPriorityOnly']);
+            $s->set('showCategory', $data['category']);
             $showUncompletedOnly = $data['uncompletedOnly'];
             $showHighPriorityOnly = $data['highPriorityOnly'];
             $showCategory = $data['category'];
         
         } else {
-            $showUncompletedOnly = $this->getOption('showUncompletedOnly');
-            $showHighPriorityOnly = $this->getOption('showHighPriorityOnly');
-            $showCategory = $this->getOption('showCategory');
+            $showUncompletedOnly = $s->get('showUncompletedOnly', '0');
+            $showHighPriorityOnly = $s->get('showHighPriorityOnly', '0');
+            $showCategory = $s->get('showCategory', null);
             $filter_form->setData([
                 'uncompletedOnly' => $showUncompletedOnly,
                 'highPriorityOnly' => $showHighPriorityOnly,
@@ -76,8 +82,7 @@ class TaskController extends Controller
 
         // get entities using the filters
 
-        $entities = $em->getRepository('AppBundle:Task')->getTasks($showUncompletedOnly, $showCategory, 
-            $showHighPriorityOnly, $field, 'ASC');
+        $entities = $this->tasks()->getTasks($showUncompletedOnly, $showCategory, $showHighPriorityOnly, $field, 'ASC');
 
         return $this->render('Task/index.html.twig', [
             'entities' => $entities,
@@ -85,48 +90,6 @@ class TaskController extends Controller
         ]);
     }
 
-    /**
-     * Read options from DB
-     */
-    protected function getOption($option) {
-        $em = $this->getDoctrine()->getManager();
-        $rep = $em->getRepository('AppBundle:TaskList');
-
-        switch ($option) {
-            case 'showUncompletedOnly':
-                return $rep->getShowUncompletedOnly();
-            case 'showHighPriorityOnly':
-                return $rep->getShowHighPriorityOnly();
-            case 'sortTasksBy':
-                return $rep->getSortTasksBy();
-            case 'showCategory':
-                return $rep->getShowCategory();
-        }
-
-        $em->flush();
-    }
-
-    protected function setOption($option, $value) {
-        $em = $this->getDoctrine()->getManager();
-        $rep = $em->getRepository('AppBundle:TaskList');
-
-        switch ($option) {
-            case 'showUncompletedOnly':
-                $rep->setShowUncompletedOnly($value);
-                break;
-            case 'showHighPriorityOnly':
-                $rep->setShowHighPriorityOnly($value);
-                break;
-            case 'sortTasksBy':
-                $rep->setSortTasksBy($value);
-                break;
-            case 'showCategory':
-                $rep->setShowCategory($value);
-                break;
-        }
-
-        $em->flush();
-    }
 
     /**
      * Displays a form to create a new Task entity.
@@ -137,9 +100,9 @@ class TaskController extends Controller
     public function newAction(Request $request)
     {
         $entity = new Task();
-        $form   = $this->createForm(new TaskType(), $entity, array(
+        $form   = $this->createForm(new TaskType(), $entity, [
             'action' => $this->generateUrl('task_new'),
-        ));
+        ]);
         $form->add('submit', 'submit', ['label' => 'Create', 'attr' => ['class' => 'btn btn-success']]);
         $form->handleRequest($request);
 
@@ -148,9 +111,8 @@ class TaskController extends Controller
             $entity->setStartedDate(new \DateTime('today'));
 
             if ( $form->isValid() ) {
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($entity);
-                $em->flush();
+                $this->em()->persist($entity);
+                $this->em()->flush();
 
                 $this->addFlash('notice', 'Notice: New task has been added');
                 return $this->redirectToRoute('task');
@@ -174,8 +136,7 @@ class TaskController extends Controller
      */
     public function editAction(Request $request, $id)
     {
-        $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository('AppBundle:Task')->find($id);
+        $entity = $this->tasks()->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Task entity.');
@@ -195,17 +156,18 @@ class TaskController extends Controller
 
           if ($form->get('delete')->isClicked()) {
               return $this->redirectToRoute('task_delete', ['id' => $entity->getId()]);
-          } else {
-              $em->flush();
-              $this->addFlash('notice', 'Notice: the task has been updated');
-              return $this->redirectToRoute('task');
           }
+
+          $this->em()->flush();
+          $this->addFlash('notice', 'Notice: the task has been updated');
+          
+          return $this->redirectToRoute('task');
         }
 
         return $this->render('Task/edit.html.twig', [
-                'entity' => $entity,
-                'form'   => $form->createView(),
-            ]);
+            'entity' => $entity,
+            'form'   => $form->createView(),
+        ]);
     }
 
     /**
@@ -216,15 +178,14 @@ class TaskController extends Controller
      */
     public function deleteAction(Request $request, $id)
     {
-        $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository('AppBundle:Task')->find($id);
+        $entity = $this->tasks()->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Task entity.');
         }
 
-        $em->remove($entity);
-        $em->flush();
+        $this->em()->remove($entity);
+        $this->em()->flush();
 
         $this->addFlash('notice', 'Notice: the task has been deleted');
 
@@ -240,8 +201,7 @@ class TaskController extends Controller
      */
     public function markCompleteAction(Request $request, $id)
     {
-        $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository('AppBundle:Task')->find($id);
+        $entity = $this->tasks()->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Task entity.');
@@ -249,11 +209,12 @@ class TaskController extends Controller
 
         $entity->setCompleted(true);
         $entity->setCompletedDate(new \DateTime('today'));
-        $em->flush();
+        $this->em()->flush();
 
         return $this->redirectToRoute('task');
     }
     
+
     /**
      * Marks a Task entity as uncompleted.
      *
@@ -263,14 +224,14 @@ class TaskController extends Controller
     public function markUncompleteAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository('AppBundle:Task')->find($id);
+        $entity = $this->tasks()->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Task entity.');
         }
 
         $entity->setCompleted(false);
-        $em->flush();
+        $this->em()->flush();
 
         return $this->redirectToRoute('task');
     }
@@ -280,8 +241,7 @@ class TaskController extends Controller
      * @Route("/task/overdue", name="show_overdue")
      */
     public function showOverdue() {
-        $em = $this->getDoctrine()->getManager();
-        $entities = $em->createQuery('SELECT t FROM AppBundle:Task t WHERE t.due < CURRENT_DATE()
+        $entities = $this->em()->createQuery('SELECT t FROM AppBundle:Task t WHERE t.due < CURRENT_DATE()
             AND t.completed = 0')->getResult();
 
         return $this->render('Task/overdue.html.twig', [
@@ -289,28 +249,12 @@ class TaskController extends Controller
         ]);
     }
 
+
     /**
      * @Route("/task/sort/{field}", name="sort_tasks")
      */
     public function sortTaskBy($field) {
-        $this->setOption('sortTasksBy', $field);
+        $this->get('session')->set('sortTasksBy', $field);
         return $this->redirectToRoute('task');
     }
 }
-
-
-/*public function findProductsExpensiveThan($price)
-{
-  $em = $this->getEntityManager();
-  $qb = $em->createQueryBuilder();
-
-  $q  = $qb->select(array('p'))
-           ->from('YourProductBundle:Product', 'p')
-           ->where(
-             $qb->expr()->gt('p.price', $price)
-           )
-           ->orderBy('p.price', 'DESC')
-           ->getQuery();
-
-  return $q->getResult();
-}*/

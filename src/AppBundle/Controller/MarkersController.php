@@ -10,7 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use \Doctrine\Common\Util\Debug;
 
 
-class MarkersController extends Controller
+class MarkersController extends BaseController
 {
     /**
      * @Route("/markers", name="markers")
